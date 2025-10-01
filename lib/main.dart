@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -9,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SwipeScreens(), 
+      home: SwipeScreens(),
     );
   }
 }
@@ -31,7 +30,7 @@ Future<Color?> showColorPicker(BuildContext context, Color startColor) {
         children: [
           for (final c in colors)
             GestureDetector(
-              onTap: () => selected = c, 
+              onTap: () => selected = c,
               child: Container(
                 width: 34,
                 height: 34,
@@ -56,8 +55,8 @@ Future<Color?> showColorPicker(BuildContext context, Color startColor) {
 }
 
 class FadingTextAnimation extends StatefulWidget {
-  final bool isDark;                  
-  final VoidCallback? onToggleTheme;    
+  final bool isDark;
+  final VoidCallback? onToggleTheme;
 
   FadingTextAnimation({Key? key, this.isDark = false, this.onToggleTheme})
       : super(key: key);
@@ -68,7 +67,7 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
-  Color _textColor = Colors.black; 
+  Color _textColor = Colors.black;
 
   void toggleVisibility() {
     setState(() {
@@ -77,7 +76,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
   }
 
   void _pickColor() async {
-    final picked = await showColorPicker(context, _textColor); 
+    final picked = await showColorPicker(context, _textColor);
     if (picked != null) {
       setState(() => _textColor = picked);
     }
@@ -89,90 +88,14 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
         ? ThemeData.dark(useMaterial3: true)
         : ThemeData.light(useMaterial3: true);
 
-    return Theme( 
+    return Theme(
       data: theme,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Fading Text Animation'),
           automaticallyImplyLeading: false,
-          leadingWidth: 120, 
-          leading: Row( 
-            children: [
-              const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(Icons.color_lens),
-                onPressed: _pickColor,
-                tooltip: 'Pick text color',
-              ),
-              IconButton(
-                icon: Icon(widget.isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined),
-                onPressed: widget.onToggleTheme, 
-                tooltip: widget.isDark ? 'Light Mode' : 'Dark Mode',
-              ),
-            ],
-          ),
-        ),
-        body: Center(
-          child: AnimatedOpacity(
-            opacity: _isVisible ? 1.0 : 0.0,
-            duration: Duration(seconds: 1),
-            child: Text(
-              'Hello, Flutter!',
-              style: TextStyle(fontSize: 24, color: _textColor),
-            ),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: toggleVisibility,
-          child: Icon(Icons.play_arrow),
-        ),
-      ),
-    );
-  }
-}
-
-class SecondFadingTextAnimation extends StatefulWidget {
-  final bool isDark;               
-  final VoidCallback? onToggleTheme; 
-
-  SecondFadingTextAnimation({Key? key, this.isDark = false, this.onToggleTheme})
-      : super(key: key);
-
-  @override
-  _SecondFadingTextAnimationState createState() => _SecondFadingTextAnimationState();
-}
-
-class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
-  bool _isVisible = true;
-  Color _textColor = Colors.blue; 
-
-  void toggleVisibility() {
-    setState(() {
-      _isVisible = !_isVisible;
-    });
-  }
-
-  void _pickColor() async {
-    final picked = await showColorPicker(context, _textColor); 
-    if (picked != null) {
-      setState(() => _textColor = picked);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = widget.isDark
-        ? ThemeData.dark(useMaterial3: true)
-        : ThemeData.light(useMaterial3: true);
-
-    return Theme( 
-      data: theme, 
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Second Fading Animation'),
-          automaticallyImplyLeading: false,
-          leadingWidth: 120, 
-          leading: Row( 
+          leadingWidth: 120,
+          leading: Row(
             children: [
               const SizedBox(width: 8),
               IconButton(
@@ -189,34 +112,155 @@ class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
           ),
         ),
         body: Center(
-          child: AnimatedOpacity(
-            opacity: _isVisible ? 1.0 : 0.0,
-            duration: Duration(seconds: 3),
-            child: Text(
-              'hello',
-              style: TextStyle(fontSize: 24, color: _textColor),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedOpacity(
+                opacity: _isVisible ? 1.0 : 0.0,
+                duration: const Duration(seconds: 1),
+                child: Text(
+                  'Hello, Flutter!',
+                  style: TextStyle(fontSize: 24, color: _textColor),
+                ),
+              ),
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: toggleVisibility,
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('Fade'),
+              ),
+              // No photo on slide 1
+            ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: toggleVisibility,
-          child: Icon(Icons.refresh),
         ),
       ),
     );
   }
 }
 
+class SecondFadingTextAnimation extends StatefulWidget {
+  final bool isDark;
+  final VoidCallback? onToggleTheme;
 
-class SwipeScreens extends StatefulWidget { 
+  SecondFadingTextAnimation({Key? key, this.isDark = false, this.onToggleTheme})
+      : super(key: key);
+
   @override
-  State<SwipeScreens> createState() => _SwipeScreensState(); 
+  _SecondFadingTextAnimationState createState() => _SecondFadingTextAnimationState();
 }
 
-class _SwipeScreensState extends State<SwipeScreens> { 
-  bool _isDark = false; 
+class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
+  bool _isVisible = true;
+  Color _textColor = Colors.blue;
+  bool _showFrame = true;
 
-  void _toggleTheme() { 
+  void toggleVisibility() {
+    setState(() {
+      _isVisible = !_isVisible;
+    });
+  }
+
+  void _pickColor() async {
+    final picked = await showColorPicker(context, _textColor);
+    if (picked != null) {
+      setState(() => _textColor = picked);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = widget.isDark
+        ? ThemeData.dark(useMaterial3: true)
+        : ThemeData.light(useMaterial3: true);
+
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Second Fading Animation'),
+          automaticallyImplyLeading: false,
+          leadingWidth: 120,
+          leading: Row(
+            children: [
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.color_lens),
+                onPressed: _pickColor,
+                tooltip: 'Pick text color',
+              ),
+              IconButton(
+                icon: Icon(widget.isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined),
+                onPressed: widget.onToggleTheme,
+                tooltip: widget.isDark ? 'Light Mode' : 'Dark Mode',
+              ),
+            ],
+          ),
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedOpacity(
+                  opacity: _isVisible ? 1.0 : 0.0,
+                  duration: const Duration(seconds: 3),
+                  child: Text(
+                    'hello',
+                    style: TextStyle(fontSize: 24, color: _textColor),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: toggleVisibility,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Fade'),
+                ),
+                const SizedBox(height: 20),
+                SwitchListTile(
+                  title: const Text('Show Image Frame'),
+                  value: _showFrame,
+                  onChanged: (v) => setState(() => _showFrame = v),
+                ),
+                Container(
+                  decoration: _showFrame
+                      ? BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 3,
+                          ),
+                        )
+                      : null,
+                  padding: _showFrame ? const EdgeInsets.all(4) : EdgeInsets.zero,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      'locke.jpg',
+                      width: 300,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SwipeScreens extends StatefulWidget {
+  @override
+  State<SwipeScreens> createState() => _SwipeScreensState();
+}
+
+class _SwipeScreensState extends State<SwipeScreens> {
+  bool _isDark = false;
+
+  void _toggleTheme() {
     setState(() => _isDark = !_isDark);
   }
 
@@ -226,12 +270,12 @@ class _SwipeScreensState extends State<SwipeScreens> {
         ? ThemeData.dark(useMaterial3: true)
         : ThemeData.light(useMaterial3: true);
 
-    return Theme( 
+    return Theme(
       data: theme,
       child: PageView(
         children: [
-          FadingTextAnimation(isDark: _isDark, onToggleTheme: _toggleTheme),       
-          SecondFadingTextAnimation(isDark: _isDark, onToggleTheme: _toggleTheme), 
+          FadingTextAnimation(isDark: _isDark, onToggleTheme: _toggleTheme),
+          SecondFadingTextAnimation(isDark: _isDark, onToggleTheme: _toggleTheme),
         ],
       ),
     );
