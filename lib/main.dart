@@ -92,7 +92,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Fading Text Animation'),
+          title: Text('First page'),
           automaticallyImplyLeading: false,
           leadingWidth: 120,
           leading: Row(
@@ -129,7 +129,6 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
                 icon: const Icon(Icons.play_arrow),
                 label: const Text('Fade'),
               ),
-              // No photo on slide 1
             ],
           ),
         ),
@@ -149,10 +148,31 @@ class SecondFadingTextAnimation extends StatefulWidget {
   _SecondFadingTextAnimationState createState() => _SecondFadingTextAnimationState();
 }
 
-class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
+class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation>
+    with SingleTickerProviderStateMixin {
   bool _isVisible = true;
   Color _textColor = Colors.blue;
   bool _showFrame = true;
+
+  late AnimationController _controller;
+  late Animation<double> _rotation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4), 
+    );
+    _rotation = CurvedAnimation(parent: _controller, curve: Curves.linear);
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void toggleVisibility() {
     setState(() {
@@ -177,7 +197,7 @@ class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
       data: theme,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Second Fading Animation'),
+          title: Text('Second page'),
           automaticallyImplyLeading: false,
           leadingWidth: 120,
           leading: Row(
@@ -206,7 +226,7 @@ class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
                   opacity: _isVisible ? 1.0 : 0.0,
                   duration: const Duration(seconds: 3),
                   child: Text(
-                    'hello',
+                    'LOCKE',
                     style: TextStyle(fontSize: 24, color: _textColor),
                   ),
                 ),
@@ -218,28 +238,30 @@ class _SecondFadingTextAnimationState extends State<SecondFadingTextAnimation> {
                 ),
                 const SizedBox(height: 20),
                 SwitchListTile(
-                  title: const Text('Show Image Frame'),
                   value: _showFrame,
                   onChanged: (v) => setState(() => _showFrame = v),
                 ),
-                Container(
-                  decoration: _showFrame
-                      ? BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 3,
-                          ),
-                        )
-                      : null,
-                  padding: _showFrame ? const EdgeInsets.all(4) : EdgeInsets.zero,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      'locke.jpg',
-                      width: 300,
-                      height: 200,
-                      fit: BoxFit.cover,
+                RotationTransition(
+                  turns: _rotation,
+                  child: Container(
+                    decoration: _showFrame
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 3,
+                            ),
+                          )
+                        : null,
+                    padding: _showFrame ? const EdgeInsets.all(4) : EdgeInsets.zero,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'locke.jpg',
+                        width: 300,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
